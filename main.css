@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  /* padding-top: 5rem; */
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #dddddd;
+}
+
+#searchBox {
+  width: 1000px;
+  max-width: 90%;
+  height: 90vh;
+  border-radius: 10px;
+  background-color: orange;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(to bottom, #b8b5ff, #e4fbff);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  /* justify-content: space-evenly; */
+  padding: 1rem 2rem;
+}
+label {
+  font-size: 3rem;
+  color: white;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+  /* margin-bottom: 1rem; */
+  font-weight: 800;
+}
+#meaning {
+  width: 100%;
+  text-align: left;
+  padding: 2rem 1rem 0;
+  height: 60%;
+  
+}
+.buttons{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  bottom: 5px;
+  left: 5px;
+}
+.buttons button{
+  background-color: purple;
+  box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.4);
+  text-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.2);
+  font-family: inherit;
+  font-weight: 500;
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.8rem;
+  margin: 0.4rem 0.4rem;
+  border: none;
+  border-radius: 3px;
+
+}
+.word {
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.6);
+  height: 2rem;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  color: black;
+  font-weight: 600;
+  text-align: center;
+  /* margin-top: -4rem; */
+}
+.word::placeholder{
+  color: rgb(196, 97, 97);
+  font-size: 1rem;
+}
+
+li {
+  font-size: 1.2rem;
+  text-shadow: .2rem .2rem .2rem rgba(0, 0, 0, 0.1);
+  text-align: left;
+  font-weight: 400;
+}
+
+@media (max-width: 800px) {
+  html {
+    font-size: 80%;
+  }
+  #searchBox{
+    height: 95vh;
+  }
+  #meaning{
+    padding: 3rem 1rem 0;
+  }
+}
