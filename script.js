@@ -28,21 +28,16 @@ async function createMeaning(arrayOfValue) {
   btnDiv.innerHTML = "";
   if (worde.value === "") {
     arrayOfValue = "";
+    meaning.innerHTML = ''
   } else {
     arrayOfValue.slice(0, 10).forEach((value) => {
       let btn = document.createElement("button");
       btn.innerText = value;
 
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
+        meaning.innerHTML = ""
         worde.value = value;
-      });
-      btnDiv.appendChild(btn);
-    });
-  }
-}
-worde.addEventListener("keydown", async function (e) {
-  if (e.key === "Enter") {
-    let mkLi = document.createElement("ul");
+        let mkLi = document.createElement("ul");
     meaning.innerHTML = "";
 
     let requiredData = await getData();
@@ -52,8 +47,31 @@ worde.addEventListener("keydown", async function (e) {
       mkLi.appendChild(makingul);
       meaning.appendChild(mkLi);
     });
+      });
+      btnDiv.appendChild(btn);
+    });
   }
-});
+}
+// window.addEventListener("keydown", async function (e) {
+//   if (e.key === "Enter") {
+//     let mkLi = document.createElement("ul");
+//     meaning.innerHTML = "";
+
+//     let requiredData = await getData();
+//     requiredData[worde.value].forEach((value) => {
+//       const makingul = document.createElement("li");
+//       makingul.innerText = value;
+//       mkLi.appendChild(makingul);
+//       meaning.appendChild(mkLi);
+//     });
+//   }
+// });
+
+// .addEventListener("keydown", async function (e) {
+//   if (e.key === "Enter") {
+    
+//   }
+// });
 
 // worde.addEventListener("input",(e)=>{
 //  let letter = e.target.value
