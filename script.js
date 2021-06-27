@@ -1,256 +1,139 @@
-const worde = document.getElementById("word");
+import { words } from "./words.js";
+const typeWord = document.getElementById("word");
+const form = document.getElementById("form");
 const meaning = document.getElementById("meaning");
 const btnDiv = document.querySelector(".buttons");
+const table = document.querySelector(".table");
+const wordsArray = words[0].split(`\n`).filter((word) => word.trim() !== "");
+let dictionary = [];
 
-getData();
+(async () => {
+  const dict = await fetch("./data.json");
+  dictionary = await dict.json();
+  dictionaryWorld();
+})();
 
-async function getData() {
-  let dict = await fetch("./data.json");
-  let data = await dict.json();
-  return data;
-}
-
-worde.addEventListener("input", async function () {
-  let requiredData = await getData();
-  let keysOfObject = Object.keys(requiredData);
-
-  let arrayofValue = [];
-  let typedValueWord = worde.value;
-  keysOfObject.forEach((key) => {
-    if (key.slice(0, typedValueWord.length) === typedValueWord) {
-      arrayofValue.push(key);
+function dictionaryWorld() {
+  // ! Get search Word
+  const searchWordFromDictionary = (word) => {
+    //! if empty than return
+    if (word === "") {
+      displayButtonToSelect("");
+      return;
     }
-  });
 
-  createMeaning(arrayofValue);
-});
-async function createMeaning(arrayOfValue) {
-  btnDiv.innerHTML = "";
-  if (worde.value === "") {
-    arrayOfValue = "";
-    meaning.innerHTML = ''
-  } else {
-    arrayOfValue.slice(0, 10).forEach((value) => {
-      let btn = document.createElement("button");
-      btn.innerText = value;
+    let matchedWords = [];
+    for (let dictWord in dictionary) {
+      if (dictWord.startsWith(word)) {
+        matchedWords.push(dictWord);
+      }
+    }
 
-      btn.addEventListener("click", async () => {
-        meaning.innerHTML = ""
-        worde.value = value;
-        let mkLi = document.createElement("ul");
+    //! Display Search btn
+    displayButtonToSelect(matchedWords);
+  };
+  // ! passs type word to search Function
+  typeWord.addEventListener("input", (e) => {
+    btnDiv.innerHTML = "";
     meaning.innerHTML = "";
 
-    let requiredData = await getData();
-    requiredData[worde.value].forEach((value) => {
-      const makingul = document.createElement("li");
-      makingul.innerText = value;
-      mkLi.appendChild(makingul);
-      meaning.appendChild(mkLi);
-    });
+    searchWordFromDictionary(e.target.value);
+  });
+
+  // ! get Meaning of searchWords
+  const getMeaning = (wordsArray) => {
+    const MeaningArray = wordsArray.map((word) => dictionary[word]);
+    return MeaningArray;
+  };
+
+  // ! display Button
+  const displayButtonToSelect = (searchBtn) => {
+    //!  first remove every thing than ADD
+    // btnDiv.innerHTML = "";
+    // ! if search is empty
+    if (searchBtn === "") return;
+
+    searchBtn.slice(0, 15).forEach((word) => {
+      // ? making button
+      let btn = document.createElement("button");
+      btn.textContent = word;
+
+      // ! adding event so that it can get meaning for click button
+      btn.addEventListener("click", () => {
+        displayMeaning(word);
+        typeWord.value = word;
       });
+
+      // ? appending to btn to its container
       btnDiv.appendChild(btn);
     });
-  }
+  };
+
+  //! Display Meaning
+  const displayMeaning = (word) => {
+    //! First Empty meaning div
+    meaning.innerHTML = "";
+
+    const [meaningArray] = getMeaning([word]);
+
+    // ! if wrong word or not in dicionary
+    if (!meaningArray) {
+      alert("There is no such word in dictionary");
+      return;
+    }
+    const ulEl = document.createElement("ul"); // ! making UL
+
+    // ! Making list of meaning
+    meaningArray.forEach((mean) => {
+      const liEl = document.createElement("li"); //! making li
+      liEl.innerText = mean; //! setting li text to meaning
+      ulEl.appendChild(liEl); //! appending li to ul
+    });
+    meaning.appendChild(ulEl); //! appeending ul to meanig div
+  };
+
+  // ! adding EventListener on form
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    displayMeaning(typeWord.value);
+    btnDiv.innerHTML = "";
+  });
+
+  //! Displaying specific words
+  const wordTable = () => {
+    const array = getMeaning(wordsArray);
+    wordsArray.forEach((word, i) => {
+      const markup = `
+      
+      <div class = "head">
+          <span class = "number">${i + 1}</span>
+          <span class="wordof" >${word}</span>
+          </div>
+          <span>${array[i]}</span>
+     
+      `;
+      const meaning = document.createElement("div");
+      meaning.className = "meaning";
+      meaning.insertAdjacentHTML("beforeend", markup);
+      meaning.addEventListener("click", () => {
+        typeWord.value = word;
+        displayMeaning(word);
+        window.scrollTo({
+          top: "0",
+        });
+      });
+      table.appendChild(meaning);
+    });
+  };
+  wordTable();
 }
-// window.addEventListener("keydown", async function (e) {
-//   if (e.key === "Enter") {
-//     let mkLi = document.createElement("ul");
-//     meaning.innerHTML = "";
 
-//     let requiredData = await getData();
-//     requiredData[worde.value].forEach((value) => {
-//       const makingul = document.createElement("li");
-//       makingul.innerText = value;
-//       mkLi.appendChild(makingul);
-//       meaning.appendChild(mkLi);
-//     });
-//   }
-// });
-
-// .addEventListener("keydown", async function (e) {
-//   if (e.key === "Enter") {
-    
-//   }
-// });
-
-// worde.addEventListener("input",(e)=>{
-//  let letter = e.target.value
-//  active = true
-//  getData(letter)
-// })
-
-// console.log(word)
-
-// const abc = Object.keys(hello)
-// // console.log(abc)
-// let a = []
-
-// let active = true
-// let btnclick = true
-// // let length = wor
-// abc.forEach(item =>{
-//   if(item.slice(0,word.length) == word){
-//   //  console.log(word.length)
-//    if(word.length === 0){
-//     a = []
-
-//   }
-//     a.push(item)
-
-//   }
-// })
-//   a = a.slice(0,10)
-// a.forEach(item =>{
-//   const btn  = document.createElement("button")
-//   btn.innerText = `${item}`
-//   meaning.appendChild(btn)
-//   btn.addEventListener("click", ()=>{
-//     worde.value = ''
-
-//     btnclick = false
-//     worde.value = btn.innerText
-//     // btn.remove()
-//     // mak()
-//   })
-
-// })
-
-// // console.log(a)
-
-// function mak(hello, word){
-//   const mkOl = document.createElement("ul")
-//   meaning.appendChild(mkOl)
-//   if(!btnclick){
-//     console.log(worde.value, "hy")
-
-//     word = worde.value
-
-//     btnclick = true
-//   }
-//   console.log(word.value)
-
-//   setTimeout(()=>{
-//     document.querySelectorAll("button").forEach(btn => btn.remove())
-//   },1000)
-//   if(!hello[word]){
-//     meaning.innerHTML = `Meaning of word not found!`
-//     worde.value = ''
-//     console.log("hy")
-
-//   }else{
-//     hello[word].forEach(words => {
-//       const makingul = document.createElement("li")
-//       makingul.innerText = words
-//       mkOl.appendChild(makingul)
-//       setTimeout(()=>{
-//         worde.value = ''
-
-//       },1000)
-//       console.log("by", words)
-
-//     });
-//   }
-// }
-
-// worde.addEventListener("change", (e)=>{
-//   let words = e.target.value;
-//   active = false
-//   getData(words)
-//   // if(!btnclick){
-//   //   words = ''
-//   //   getData(words)
-//   // }else{
-//   //   getData(words)
-
-//   // }
-// })
-
-// worde.addEventListener("input",(e)=>{
-//  let letter = e.target.value
-//  active = true
-//  getData(letter)
-// })
-
-// // console.log(word)
-
-// async function getData(word){
-//     dict = await fetch('./data.json')
-//      hello = await dict.json()
-//     // console.log(hello)
-//     meaning.innerText = ''
-//     if(!active){
-//       active = true
-//       mak(hello , word)
-
-//     }
-
-//     const abc = Object.keys(hello)
-//     // console.log(abc)
-//     let a = []
-
-//     // let length = wor
-//     abc.forEach(item =>{
-//       if(item.slice(0,word.length) == word){
-//       //  console.log(word.length)
-//        if(word.length === 0){
-//         a = []
-
-//       }
-//         a.push(item)
-
-//       }
-//     })
-//       a = a.slice(0,10)
-//     a.forEach(item =>{
-//       const btn  = document.createElement("button")
-//       btn.innerText = `${item}`
-//       meaning.appendChild(btn)
-//       btn.addEventListener("click", ()=>{
-//         worde.value = ''
-
-//         btnclick = false
-//         worde.value = btn.innerText
-//         // btn.remove()
-//         // mak()
-//       })
-
-//     })
-
-//     // console.log(a)
-
-// }
-
-// function mak(hello, word){
-//   const mkOl = document.createElement("ul")
-//   meaning.appendChild(mkOl)
-//   if(!btnclick){
-//     console.log(worde.value, "hy")
-
-//     word = worde.value
-
-//     btnclick = true
-//   }
-//   console.log(word.value)
-
-//   setTimeout(()=>{
-//     document.querySelectorAll("button").forEach(btn => btn.remove())
-//   },1000)
-//   if(!hello[word]){
-//     meaning.innerHTML = `Meaning of word not found!`
-//     worde.value = ''
-//     console.log("hy")
-
-//   }else{
-//     hello[word].forEach(words => {
-//       const makingul = document.createElement("li")
-//       makingul.innerText = words
-//       mkOl.appendChild(makingul)
-//       setTimeout(()=>{
-//         worde.value = ''
-
-//       },1000)
-//       console.log("by", words)
-
-//     });
-//   }
-// }
+window.onload = function () {
+  Particles.init({
+    selector: ".background",
+    connectParticles: true,
+    sizeVariations: 2,
+    maxParticles: 100,
+    color: "#892A36",
+  });
+};
